@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio Saya</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="intro-open">
+
+    <!-- LEFT SIDE NAV -->
+    <nav id="sideNav" class="side-nav" aria-label="Navigasi utama">
+        <ul>
+            <li><a href="#home" class="side-link active">Home</a></li>
+            <li><a href="#about" class="side-link">About</a></li>
+            <li><a href="#projects" class="side-link">Projects</a></li>
+            <li><a href="#contact" class="side-link">Contacts</a></li>
+        </ul>
+    </nav>
+
+    <!-- MAIN CONTENT (satu section aktif per waktu) -->
+    <main id="app">
+        <section id="home" class="page active"></section>
+        <section id="about" class="page"></section>
+        <section id="projects" class="page"></section>
+        <section id="contact" class="page"></section>
+    </main>
+
+    <!-- INTRO OVERLAY -->
+    <div id="intro" class="intro">
+        <h1 class="greeting">
+            <span class="typed"></span><span class="cursor">│</span>
+        </h1>
+    </div>
+
+    <script src="section-loader.js"></script>
+    <script src="script.js"></script> <!-- file baru untuk load HTML -->
+</body>
+</html>

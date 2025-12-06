@@ -1,0 +1,273 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Lock scroll while intro is open */
+body.intro-open { overflow: hidden; }
+
+/* Intro typing overlay */
+.intro {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #071226 0%, #0b2330 60%);
+    color: #fff;
+    z-index: 9999;
+    text-align: center;
+    padding: 2rem;
+}
+
+.greeting { font-size: clamp(1.6rem, 5vw, 2.8rem); font-weight: 700; margin: 0; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
+.typed { display: inline-block; white-space: nowrap; }
+.cursor { display: inline-block; margin-left: 6px; color: #9ee8df; animation: blink 900ms steps(1,start) infinite; }
+
+@keyframes blink { 0% { opacity: 1 } 50% { opacity: 0 } 100% { opacity: 1 } }
+
+/* fade-out class when hiding intro */
+.intro.fade-out { animation: introFade 420ms ease-in forwards; }
+@keyframes introFade { to { opacity: 0; transform: translateY(-12px) scale(.995); pointer-events: none; } }
+
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+nav a {
+    margin: 0 1rem;
+    color: white;
+    text-decoration: none;
+}
+
+/* Main app container */
+#app {
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Page sections: show only active one */
+.page {
+    display: none;
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.page.active {
+    display: block;
+    animation: pageEnter 360ms cubic-bezier(.16,.84,.44,1);
+}
+
+@keyframes pageEnter {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+section {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.project {
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    background: white;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #333;
+    color: white;
+}
+
+/* Responsif untuk mobile */
+@media (max-width: 600px) {
+    nav a { display: block; margin: 0.5rem 0; }
+}
+
+/* CARD PROFILE */
+.profile-card {
+    max-width: 380px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 24px;
+    background: linear-gradient(160deg, #0a1a33 0%, #142d4c 60%, #1b375a 100%);
+    box-shadow: 0px 18px 40px rgba(0, 0, 0, 0.4);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* Foto */
+.profile-photo {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-top: 1.6rem;
+    filter: grayscale(40%);
+    border: 3px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Nama dan role */
+.profile-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.profile-role {
+    font-size: 1rem;
+    opacity: 0.75;
+    margin-top: 4px;
+}
+
+/* Tombol di bawah */
+.profile-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.profile-btn,
+.profile-btn-outline {
+    padding: 0.6rem 1.2rem;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s ease;
+}
+
+/* Left */
+.profile-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    backdrop-filter: blur(8px);
+}
+.profile-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Right */
+.profile-btn-outline {
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+.profile-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+/* Interactive 3D card behaviour */
+.profile-card {
+    perspective: 1200px;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: box-shadow 280ms ease;
+    opacity: 1;
+    transform: none;
+}
+
+.profile-card:hover {
+    box-shadow: 0 28px 60px rgba(2,6,23,0.55);
+}
+
+.profile-card.animate {
+    animation: fadeSlideIn 620ms cubic-bezier(.16,.84,.44,1) forwards;
+}
+
+@keyframes fadeSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.profile-card .profile-photo {
+    transition: transform 360ms cubic-bezier(.2,.8,.2,1), filter 360ms ease;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.profile-card .profile-name {
+    transition: transform 360ms cubic-bezier(.2,.8,.2,1), text-shadow 240ms ease;
+    transform-style: preserve-3d;
+}
+
+.profile-card .profile-actions {
+    transition: transform 360ms cubic-bezier(.2,.8,.2,1), opacity 260ms ease;
+}
+
+.profile-name.animate,
+.profile-role.animate,
+.profile-photo.animate,
+.profile-actions.animate {
+    animation: fadeUp 500ms ease forwards;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.home-section {
+    margin-top: 2rem;
+    padding: 1rem;
+}
+
+.intro-text {
+    max-width: 800px;
+    margin: 2rem auto;
+    text-align: center;
+    color: #333;
+}
+
+/* Left side navigation */
+.side-nav {
+    position: fixed;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1100;
+}
+.side-nav ul { list-style: none; margin: 0; padding: 0; }
+.side-nav li { margin: 8px 0; }
+.side-nav .side-link {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #0b1720;
+    background: rgba(255,255,255,0.95);
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.08);
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+.side-nav .side-link:hover { transform: translateX(6px); box-shadow: 0 10px 30px rgba(2,6,23,0.12); }
+.side-nav .side-link.active {
+    background: #0ea5a4; color: white; box-shadow: 0 12px 30px rgba(14,165,164,0.18);
+}
+
+/* Mobile: hide side nav to avoid covering content */
+@media (max-width: 800px) {
+    .side-nav { display: none; }
+}
+
