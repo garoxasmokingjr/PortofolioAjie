@@ -1,3 +1,4 @@
+// Typing intro + skip/fallback
 document.addEventListener('DOMContentLoaded', function () {
     const intro = document.getElementById('intro');
     const typedEl = intro ? intro.querySelector('.typed') : null;
@@ -42,12 +43,15 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.remove('intro-open');
     }
 
+    // Load HTML sections
     loadAllSections();
 
+    // Routing: handle hash changes
     window.addEventListener('hashchange', updateActivePage);
     updateActivePage();
 });
 
+// Load all section HTML files
 function loadAllSections() {
     const sections = ['home', 'about', 'projects', 'contact'];
     sections.forEach(id => {
@@ -86,6 +90,7 @@ function loadAllSections() {
     });
 }
 
+// Update active page based on URL hash
 function updateActivePage() {
     const hash = window.location.hash.slice(1) || 'home';
     const pages = document.querySelectorAll('.page');
@@ -94,14 +99,14 @@ function updateActivePage() {
     const activePage = document.getElementById(hash);
     if (activePage) {
         activePage.classList.add('active');
-
+        // Init parallax saat home halaman aktif (delay kecil agar DOM sudah siap)
         if (hash === 'home') {
             setTimeout(() => {
                 const card = document.querySelector('.profile-card');
                 if (card && card.dataset.parallaxInit !== 'true') {
                     initProfileCardAnimation();
                 }
-
+                // Start home-specific animations
                 try { initHomeAnimations(); } catch (e) { /* ignore */ }
             }, 50);
         }
@@ -118,7 +123,7 @@ function updateActivePage() {
     }
 }
 
-
+// Home-specific animations: rotating typed roles + skill reveal
 function initHomeAnimations() {
     const rolesEl = document.querySelector('.typed-roles');
     if (rolesEl && !rolesEl.dataset.inited) {
@@ -139,7 +144,7 @@ function initHomeAnimations() {
         }, 1800);
     }
 
-
+    // stagger skill badges
     const skills = document.querySelectorAll('.skill');
     skills.forEach((el, i) => {
         el.classList.remove('pop');
@@ -147,7 +152,7 @@ function initHomeAnimations() {
     });
 }
 
-
+// Side nav active state
 (function () {
     const links = Array.from(document.querySelectorAll('.side-nav .side-link'));
     if (!links.length) return;
@@ -177,13 +182,13 @@ function initHomeAnimations() {
     updateNavActive();
 })();
 
-
+// 3D Parallax for profile card
 function initProfileCardAnimation() {
     const card = document.querySelector('.profile-card');
     if (!card) return;
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-
+    // Check if already initialized (avoid duplicate listeners)
     if (card.dataset.parallaxInit === 'true') return;
     card.dataset.parallaxInit = 'true';
 
@@ -192,6 +197,7 @@ function initProfileCardAnimation() {
     const actions = card.querySelector('.profile-actions');
     const holoLetters = Array.from(card.querySelectorAll('.holo-letter'));
 
+    // Randomize base positions, scale and rotation for holo letters once
     function randomizeHoloLetters() {
         if (!holoLetters || !holoLetters.length) return;
         holoLetters.forEach((el, i) => {
@@ -213,6 +219,7 @@ function initProfileCardAnimation() {
         });
     }
 
+    // run randomization now
     randomizeHoloLetters();
 
     let raf = null;
@@ -224,12 +231,14 @@ function initProfileCardAnimation() {
         if (photo) photo.style.transform = `translateZ(36px) translateX(${state.tx * 0.6}px) translateY(${state.ty * 0.4}px)`;
         if (name) name.style.transform = `translateZ(20px) translateY(${state.ty * 0.18}px)`;
         if (actions) actions.style.transform = `translateZ(12px)`;
+        // update hologram CSS variables for subtle background motion
         try {
             card.style.setProperty('--tx', state.tx + 'px');
             card.style.setProperty('--ty', state.ty + 'px');
             card.style.setProperty('--rx', state.rx + 'deg');
             card.style.setProperty('--ry', state.ry + 'deg');
         } catch (e) { /* ignore if style.setProperty fails */ }
+        // update holo letters: translate and slight rotate based on state
         if (holoLetters && holoLetters.length) {
             card.classList.add('holo-active');
                 holoLetters.forEach((el, i) => {
@@ -240,6 +249,7 @@ function initProfileCardAnimation() {
                     const baseRot = Number(el.dataset.baseRot) || 0;
                     const baseOpacity = Number(el.dataset.baseOpacity) || 0.9;
 
+                    // multipliers give varied parallax motion per letter
                     const mulX = 0.5 + (i % 4) * 0.18;
                     const mulY = 0.35 + (i % 3) * 0.12;
 
@@ -248,9 +258,11 @@ function initProfileCardAnimation() {
                     const rot = baseRot + state.ry * (i % 2 === 0 ? 0.6 : -0.6);
 
                     el.style.transform = `translate(-50%, -50%) translate3d(${offsetX}px, ${offsetY}px, 0) rotateZ(${rot}deg) scale(${baseScale})`;
+                    // increase brightness/opacity + CD hologram glow when movement is active
                     const activity = Math.min(1, Math.abs(state.tx) * 0.08 + Math.abs(state.ty) * 0.06);
                     el.style.opacity = Math.max(0.5, Math.min(1, baseOpacity + activity * 0.45));
                     
+                    // Dynamic hologram glow: increases with parallax activity, mimics CD shine effect
                     const glowIntensity = activity * 0.8;
                     const shadowColor1 = `rgba(158,232,223,${0.5 + glowIntensity * 0.5})`;
                     const shadowColor2 = `rgba(14,165,164,${0.3 + glowIntensity * 0.4})`;
@@ -297,16 +309,20 @@ function initProfileCardAnimation() {
         }
     }
 
+    // Only track pointermove for mouse always, for touch only while pointer is pressed
     card.addEventListener('pointermove', (e) => {
         if (e.pointerType === 'touch' && !touchActive) return;
         handlePointer(e.clientX, e.clientY);
     }, { passive: true });
 
+    // For touch devices: enable tracking only while pressing/dragging
     card.addEventListener('pointerdown', (e) => {
         if (e.pointerType === 'touch') {
             touchActive = true;
+            // set pointer capture so we keep receiving pointermove while dragging
             try { (e.target || card).setPointerCapture && (e.target || card).setPointerCapture(e.pointerId); } catch (err) {}
             handlePointer(e.clientX, e.clientY);
+            // show holo letters immediately on touchstart
             if (card) card.classList.add('holo-active');
         }
     });
@@ -338,22 +354,26 @@ function initProfileCardAnimation() {
     });
 }
 
+// About page animations: reveal lines, show-more toggle, animate skill meters
 function initAboutAnimations() {
     const about = document.querySelector('.about-content');
     if (!about) return;
     if (about.dataset.inited === 'true') return;
     about.dataset.inited = 'true';
 
+    // reveal lines with stagger
     const lines = about.querySelectorAll('.about-intro .line');
     lines.forEach((el, i) => {
         setTimeout(() => el.classList.add('visible'), i * 220);
     });
 
+    // encourage interaction: pulse the show-more button after lines reveal
     const pulseBtn = about.querySelector('.show-more-btn');
     if (pulseBtn) {
         setTimeout(() => pulseBtn.classList.add('pulse'), Math.min(900, (lines.length * 220) + 300));
     }
 
+    // show-more toggle
     const btn = about.querySelector('.show-more-btn');
     const more = about.querySelector('.about-more');
     if (btn && more) {
@@ -389,6 +409,7 @@ function initAboutAnimations() {
         });
     }
 
+    // If .about-more is visible by default (edge case), animate meters now
     const moreMeters = about.querySelectorAll('.about-more .skill-meter');
     if (more && !more.hidden && moreMeters.length) {
         moreMeters.forEach((m, idx) => {
@@ -407,6 +428,7 @@ function initAboutAnimations() {
     }
 }
 
+// Contact page interactions: set/show instagram handle, copy link, animations
 function initContactAnimations() {
     const root = document.querySelector('.contact-content');
     if (!root) return;
@@ -447,6 +469,7 @@ function initContactAnimations() {
             handleEl.setAttribute('href', url);
             handleEl.textContent = '@' + raw;
 
+            // animate card briefly
             if (card) {
                 card.classList.add('reveal');
                 setTimeout(() => card.classList.remove('reveal'), 800);
@@ -474,13 +497,16 @@ function initContactAnimations() {
         });
     }
 
+    // Interactive social icons (open in new tab + small click feedback)
     const socialGrid = root.querySelector('.social-grid');
     if (socialGrid) {
         const links = Array.from(socialGrid.querySelectorAll('.social-link'));
         links.forEach(a => {
             a.addEventListener('click', (e) => {
+                // visual feedback
                 a.classList.add('clicked');
                 setTimeout(() => a.classList.remove('clicked'), 420);
+                // default behavior opens in new tab due to anchor attributes
             });
             a.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); a.click(); }
@@ -488,6 +514,7 @@ function initContactAnimations() {
         });
     }
 
+    // If we have the new social cards, add a similar lightweight feedback
     const socialList = root.querySelector('.social-list');
     if (socialList) {
         const cards = Array.from(socialList.querySelectorAll('.social-card'));
