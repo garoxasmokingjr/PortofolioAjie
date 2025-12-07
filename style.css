@@ -6,8 +6,10 @@ body {
     color: #333;
 }
 
+/* Lock scroll while intro is open */
 body.intro-open { overflow: hidden; }
 
+/* Intro typing overlay */
 .intro {
     position: fixed;
     inset: 0;
@@ -27,6 +29,7 @@ body.intro-open { overflow: hidden; }
 
 @keyframes blink { 0% { opacity: 1 } 50% { opacity: 0 } 100% { opacity: 1 } }
 
+/* fade-out class when hiding intro */
 .intro.fade-out { animation: introFade 420ms ease-in forwards; }
 @keyframes introFade { to { opacity: 0; transform: translateY(-12px) scale(.995); pointer-events: none; } }
 
@@ -44,6 +47,7 @@ nav a {
     text-decoration: none;
 }
 
+/* Main app container */
 #app {
     position: relative;
     min-height: 100vh;
@@ -51,6 +55,7 @@ nav a {
     overflow-x: hidden;
 }
 
+/* Page sections: show only active one */
 .page {
     display: none;
     padding: 1.5rem;
@@ -60,6 +65,7 @@ nav a {
     box-sizing: border-box;
 }
 
+/* Extra space at bottom for mobile nav on very small screens */
 @media (max-width: 480px) {
     .page {
         padding-bottom: 4rem;
@@ -98,10 +104,12 @@ footer {
     color: white;
 }
 
+/* Responsif untuk mobile */
 @media (max-width: 600px) {
     nav a { display: block; margin: 0.5rem 0; }
 }
 
+/* CARD PROFILE */
 .profile-card {
     max-width: 380px;
     margin: 1rem auto;
@@ -117,6 +125,7 @@ footer {
     box-sizing: border-box;
 }
 
+/* Foto */
 .profile-photo {
     width: 140px;
     height: 140px;
@@ -127,6 +136,7 @@ footer {
     border: 3px solid rgba(255, 255, 255, 0.15);
 }
 
+/* Nama dan role */
 .profile-name {
     font-size: 1.4rem;
     font-weight: 700;
@@ -139,6 +149,7 @@ footer {
     margin-top: 0.3rem;
 }
 
+/* Tombol di bawah */
 .profile-actions {
     margin-top: 1.2rem;
     display: flex;
@@ -161,6 +172,7 @@ footer {
     box-sizing: border-box;
 }
 
+/* Left */
 .profile-btn {
     background: rgba(255, 255, 255, 0.15);
     color: white;
@@ -170,6 +182,7 @@ footer {
     background: rgba(255, 255, 255, 0.25);
 }
 
+/* Right */
 .profile-btn-outline {
     border: 2px solid rgba(255, 255, 255, 0.18);
     color: white;
@@ -179,6 +192,7 @@ footer {
     background: rgba(255, 255, 255, 0.18);
 }
 
+/* Interactive 3D card behaviour */
 .profile-card {
     perspective: 1200px;
     transform-style: preserve-3d;
@@ -188,6 +202,7 @@ footer {
     transform: none;
 }
 
+/* Hologram background layer for profile card */
 .profile-card {
     /* CSS variables set by JS: --tx, --ty, --rx, --ry */
     --tx: 0px;
@@ -196,6 +211,8 @@ footer {
     --ry: 0deg;
 }
 
+/* Background letters layer - scattered A's on blue background */
+/* (removed) Background letters (::before) were removed to prevent overlaying the profile photo */
 
 .profile-card::after {
     /* hologram glow effect over the background letters */
@@ -217,22 +234,23 @@ footer {
     z-index: 1;
 }
 
+/* ensure proper stacking: background letters (::before) -> hologram glow (::after) -> holo letters -> profile content/photo */
 
 .holo-letters { z-index: 2; }
 .profile-card .profile-content { position: relative; z-index: 3; }
 .profile-card .profile-photo { position: relative; z-index: 4; }
-
-
+/* stronger hologram when hovered (desktop) */
 @media (hover: hover) {
     .profile-card:hover::after { transform: translate3d(calc(var(--tx) * 0.12), calc(var(--ty) * 0.09), 0) translateZ(0); }
 }
 
-
+/* mobile: slightly reduce blur for performance */
 @media (max-width: 480px) {
     /* no ::before present; keep performance adjustments for ::after */
     .profile-card::after { filter: blur(6px) saturate(110%); }
 }
 
+/* Hologram letters inside profile card */
 .holo-letters {
     position: absolute;
     inset: 0;
@@ -253,18 +271,21 @@ footer {
     transition: transform 260ms cubic-bezier(.2,.8,.2,1), opacity 220ms ease, filter 260ms linear;
     filter: blur(0.6px) saturate(120%);
 }
+/* Opacity increases when parallax is active */
 .profile-card.holo-active .holo-letter { opacity: 0.85; }
 
+/* distribute letters around all edges: corners + cardinal points + extra scatter */
+/* corners (1-4) */
 .holo-letter:nth-child(1) { transform: translate(-50%, -50%) translate3d(-75px,-65px,0) scale(0.95); font-size:26px; } /* top-left */
 .holo-letter:nth-child(2) { transform: translate(-50%, -50%) translate3d(75px,-65px,0) scale(1.0); font-size:28px; } /* top-right */
 .holo-letter:nth-child(3) { transform: translate(-50%, -50%) translate3d(-75px,65px,0) scale(0.92); font-size:24px; } /* bottom-left */
 .holo-letter:nth-child(4) { transform: translate(-50%, -50%) translate3d(75px,65px,0) scale(1.04); font-size:26px; } /* bottom-right */
-
+/* edge centers (5-8) */
 .holo-letter:nth-child(5) { transform: translate(-50%, -50%) translate3d(0,-75px,0) scale(0.98); font-size:25px; } /* top-center */
 .holo-letter:nth-child(6) { transform: translate(-50%, -50%) translate3d(85px,0,0) scale(1.02); font-size:27px; } /* right-center */
 .holo-letter:nth-child(7) { transform: translate(-50%, -50%) translate3d(0,75px,0) scale(0.96); font-size:24px; } /* bottom-center */
 .holo-letter:nth-child(8) { transform: translate(-50%, -50%) translate3d(-85px,0,0) scale(1.0); font-size:26px; } /* left-center */
-
+/* extra scatter around corners (9-12) */
 .holo-letter:nth-child(9) { transform: translate(-50%, -50%) translate3d(-55px,-45px,0) scale(0.88); font-size:20px; } /* top-left scatter */
 .holo-letter:nth-child(10) { transform: translate(-50%, -50%) translate3d(55px,-45px,0) scale(0.91); font-size:21px; } /* top-right scatter */
 .holo-letter:nth-child(11) { transform: translate(-50%, -50%) translate3d(-55px,45px,0) scale(0.89); font-size:20px; } /* bottom-left scatter */
@@ -289,6 +310,7 @@ footer {
     transition: transform 360ms cubic-bezier(.2,.8,.2,1), opacity 260ms ease;
 }
 
+    /* Background holo A letters distributed on each side */
     .bg-holo {
         position: absolute;
         inset: 0;
@@ -315,6 +337,7 @@ footer {
     .bg-holo-right { right: 8px; }
     .bg-holo span { display:inline-block; font-size:18px; line-height:1; opacity:0.9; filter: blur(.6px) saturate(110%); text-shadow: 0 6px 10px rgba(11,23,32,0.12); }
 
+    /* Intensify hologram when active (hover / parallax) */
     .profile-card.holo-active .bg-holo,
     .profile-card:hover .bg-holo {
         color: rgba(158,232,223,0.28);
@@ -353,6 +376,7 @@ footer {
     box-sizing: border-box;
 }
 
+/* About page enhancements */
 .about-hero { max-width: 980px; margin: 1.25rem auto; padding: 1rem; }
 .about-content h2 { margin-top: 0; font-size: 1.6rem; }
 .about-intro { color: #1f2937; line-height: 1.6; font-size: 1rem; }
@@ -373,6 +397,7 @@ footer {
 .skill-fill .skill-value { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 0.78rem; font-weight:700; color: rgba(255,255,255,0.95); opacity: 0; transition: opacity 360ms ease, transform 360ms cubic-bezier(.2,.8,.2,1); }
 .skill-fill.show-value .skill-value { opacity: 1; transform: translateY(-50%) translateX(0); }
 
+/* pulse hint on show-more button to invite click */
 .show-more-btn.pulse { box-shadow: 0 8px 18px rgba(14,165,164,0.18); transform: translateY(-2px); }
 .show-more-btn.pulse::after { content: ''; display:block; width:8px; height:8px; border-radius:50%; background:#0ea5a4; position:absolute; right:-8px; top:-8px; box-shadow: 0 6px 16px rgba(14,165,164,0.18); }
 .show-more-btn { position: relative; }
@@ -381,6 +406,7 @@ footer {
     .about-hero { padding: 0.75rem; }
 }
 
+/* Home hero interactive */
 .home-hero {
     display: grid;
     grid-template-columns: 1fr 360px;
@@ -409,6 +435,7 @@ footer {
 
 .skills { display:flex; gap: 0.5rem; flex-wrap:wrap; }
 
+/* Social icons grid in contact page */
 .social-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -424,11 +451,12 @@ footer {
     align-items: center;
     justify-content: center;
     border-radius: 12px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(11,23,32,0.02));
+    background: #ffffff;
     color: rgba(158,232,223,0.92);
     text-decoration: none;
     transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, background 240ms linear;
     box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+    border: 1px solid rgba(0,0,0,0.1);
 }
 .social-link svg { width: 22px; height: 22px; fill: currentColor; }
 .social-link:hover,
@@ -449,6 +477,7 @@ footer {
     .social-link svg { width: 18px; height: 18px; }
 }
 
+/* Accessible visual tooltips for social links (uses aria-label content) */
 .social-link { position: relative; }
 .social-link::after {
     content: attr(aria-label);
@@ -487,6 +516,7 @@ footer {
     z-index: 9;
 }
 
+/* New social card list layout */
 .social-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -494,14 +524,16 @@ footer {
     margin: 0.9rem 0 0.6rem 0;
 }
 .social-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(11,23,32,0.03));
+    background: #ffffff;
     border-radius: 12px;
     padding: 12px;
     display: flex;
     align-items: center;
     gap: 12px;
-    box-shadow: 0 8px 20px rgba(2,6,23,0.06);
+    box-shadow: 0 8px 20px rgba(2,6,23,0.3);
     transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, background 240ms linear;
+    min-height: 70px;
+    border: 2px solid rgba(14,165,164,0.2);
 }
 .social-card .card-link { display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; width:100%; }
 .social-card svg { width: 34px; height: 34px; flex: 0 0 34px; color: rgba(158,232,223,0.98); }
@@ -509,13 +541,15 @@ footer {
 .social-card .card-body .muted { margin:0; margin-top:4px; font-size:0.85rem; color: rgba(11,23,32,0.6); }
 .social-card:hover, .social-card:focus-within { transform: translateY(-6px); box-shadow: 0 18px 44px rgba(14,165,164,0.10); }
 
+/* network-specific accents (optional) */
 .social-card.instagram svg { color: #E1306C; }
 .social-card.facebook svg { color: #1877F2; }
 .social-card.linkedin svg { color: #0A66C2; }
 .social-card.github svg { color: #333; }
 
 @media (max-width: 820px) {
-    .social-list { grid-template-columns: 1fr; }
+    .social-list { grid-template-columns: 1fr; gap: 12px;}
+    .social-card { padding: 10px;}
 }
 
 .social-link:hover::after,
@@ -539,12 +573,14 @@ footer {
 
 .hero-card { display:flex; justify-content:center; }
 
+/* Small screens stack */
 @media (max-width: 820px) {
     .home-hero { grid-template-columns: 1fr; padding: 1rem; }
     .hero-card { order: -1; display:flex; justify-content:center; margin-bottom: 0.75rem; }
     .cta-buttons { justify-content: flex-start; }
 }
 
+/* Contact page styles */
 .contact-hero { max-width: 820px; margin: 1.25rem auto; padding: 1rem; }
 .contact-desc { color: #334155; margin-bottom: 0.75rem; }
 .contact-card { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border-radius: 12px; padding: 1rem; box-shadow: 0 8px 24px rgba(2,6,23,0.06); transition: transform 360ms cubic-bezier(.2,.8,.2,1), opacity 360ms ease; opacity: 1; }
@@ -560,8 +596,10 @@ footer {
 .copy-btn { background: #0b1720; }
 .contact-note { margin-top:0.75rem; font-size:0.85rem; color:#64748b; }
 
+/* small feedback for copied */
 .copy-btn.copied { background: #0f766e; }
 
+/* shake animation for invalid input */
 @keyframes shake { 0%{ transform: translateX(0) } 25%{ transform: translateX(-6px) } 50%{ transform: translateX(6px) } 75%{ transform: translateX(-4px) } 100%{ transform: translateX(0) } }
 .shake { animation: shake 420ms ease; }
 
@@ -570,9 +608,10 @@ footer {
     .contact-card { padding:0.75rem; }
     .contact-username { font-size:0.9rem; }
 }
-
+/* subtle accent for hero name */
 .hero-title .name { background: linear-gradient(90deg,#9ee8df,#0ea5a4); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
+/* Left side navigation */
 .side-nav {
     position: fixed;
     left: 36px; /* moved slightly toward center */
@@ -625,6 +664,7 @@ footer {
     background: #0ea5a4; color: white; box-shadow: 0 10px 28px rgba(14,165,164,0.18);
 }
 
+/* Mobile: show nav at bottom instead of left side on very small screens */
 @media (max-width: 480px) {
     .side-nav {
         position: fixed;
@@ -644,6 +684,7 @@ footer {
         gap: 12px; /* add horizontal spacing on mobile */
     }
 
+    /* Slightly smaller icons on very small screens */
     .side-nav .side-link .nav-icon {
         width: 16px;
         height: 16px;
@@ -677,6 +718,7 @@ footer {
     }
 }
 
+/* Extra small devices (iPhone SE, etc) */
 @media (max-width: 380px) {
     body {
         font-size: 13px;
@@ -726,6 +768,7 @@ footer {
     }
 }
 
+/* Landscape mode pada mobile */
 @media (max-height: 500px) and (orientation: landscape) {
     #app {
         min-height: auto;
